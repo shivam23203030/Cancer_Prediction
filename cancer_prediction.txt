@@ -1,0 +1,89 @@
+1)#importing the dependencies
+import numpy as np
+import pandas as pd
+import sklearn.datasets
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+2)#loading the data from sklearn
+breast_cancer_dataset=sklearn.datasets.load_breast_cancer()
+
+3)print(breast_cancer_dataset)
+4)#loading the dataset to data frame
+data_frame=pd.DataFrame(breast_cancer_dataset.data,columns=breast_cancer_dataset.feature_names)
+
+5)#print the first 5 rows
+data_frame.head()
+
+6)#adding the target column to dataframe
+data_frame['label']=breast_cancer_dataset.target
+
+7)#print last 5 rows of the dataframe
+data_frame.tail()
+
+8)#number of rows and columns in the dataset
+data_frame.shape
+
+9)#getting some information about the data
+data_frame.info()
+
+10)#checking for missing values
+data_frame.isnull().sum()
+
+11)#statistical measures about the data
+data_frame.describe()
+
+12)#checking the distribution of target variable
+data_frame['label'].value_counts()
+
+13)# 1 represent benign and 0 represent Malignant
+data_frame.groupby('label').mean()
+
+14)X=data_frame.drop('label',axis=1)
+Y=data_frame['label']
+
+15)print(X)
+16)print(Y)
+
+17)#splitting the data into training and testing
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.2,random_state=2)
+
+18)print(X.shape,X_train.shape,X_test.shape)
+
+19)#Logistic Regression
+Model=LogisticRegression()
+
+20)#training the Logistic Regression Model
+Model.fit(X_train,Y_train)
+
+21)#Model Evaluation
+#accurcy on training data
+X_train_prediction=Model.predict(X_train)
+training_data_accuracy=accuracy_score(Y_train,X_train_prediction)
+
+22)print("Accuracy on training data",training_data_accuracy)
+
+23)#accurcy on testing data
+X_test_prediction=Model.predict(X_test)
+test_data_accuracy=accuracy_score(Y_test,X_test_prediction)
+
+24)print("Accuracy on test data",test_data_accuracy)
+
+25)#Builing a predicive system
+# Predicting for the entire dataset
+predictions = Model.predict(X)
+
+# Print out the predictions for each instance
+for i in range(len(predictions)):
+    print(f"Instance {i+1}: Prediction = {predictions[i]}")
+    if predictions[i] == 0:
+        print("The person does not have Breast Cancer")
+    else:
+        print("The person has Breast Cancer")
+
+26)# Adding the predictions as a new column to the original DataFrame
+data_frame['Prediction'] = predictions
+
+27)# Displaying the first few rows of the updated DataFrame
+print(data_frame.head())
